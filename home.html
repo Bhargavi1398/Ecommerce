@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="{% static "style1.css"%}">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <script
+    src="https://code.jquery.com/jquery-3.5.1.js"
+    integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/accounts/login">LOGIN</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                  <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Features</a>
+                  </li>
+                  <li class="nav-item">
+                    <button id="cart" type="button" data-html="true" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="bottom" data-content="This is My Cart">
+      Cart(0)
+    </button>
+            </li>
+            <li class="nav-item">
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+      <div class="row">
+        <div class="col">
+          <form class="card card-sm">
+            <div class="card-body row">
+              <div class="col">
+                <input type="search" name="item_name"  placeholder="Search for products" class="form control form-control-borderless">
+              </div>
+              <div class="col-auto">
+                <button type="submit" class="btn btn-success">Search</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+          <div class="row">
+              {% for i in ecommerce %}
+        <div class="col-md-2">
+          <div class="card">
+        <img class="card-img-top" src="{{i.image}}" alt="Card image cap">
+        <div class="card-body">
+          <div class="text-primary">Name:{{i.name}}</div>
+          <div class="text-primary">Price:{{i.price}}</div>
+            <div class="text-primary">category:{{i.category}}</div>
+              <div class="text-primary">About:{{i.about}}</div>
+              <div class="text-primary">Size:{{i.size}}</div>
+                  <div class="text-primary">Discounted_price{{i.discounted_price}}</div>
+                  <button  id="{{i.id}}"class="btn atc btn-success">Add to cart</button>
+        <a href="/read/{{i.id}}" class="btn btn-danger">View</a>
+        </div>
+      </div>
+      </div>
+      {% endfor %}
+            </div>
+      </div>
+  </body>
+  <script type="text/javascript">
+
+if(localStorage.getItem('cart')==null)
+{
+     var cart={}//key=product_id and value=quantity
+}
+
+else
+ {
+  cart=JSON.parse(localStorage.getItem('cart'))//{4:2}
+}
+
+
+$(document).on('click','.atc',function()
+{
+console.log("Item has been added")
+var item_id=this.id.toString()
+console.log(item_id);
+
+
+if(cart[item_id]!=undefined)
+{
+  cart[item_id]=cart[item_id]+1
+
+}
+
+else
+ {
+  cart[item_id]=1
+
+}
+
+console.log(cart);
+
+localStorage.setItem('cart',JSON.stringify(cart))
+
+document.getElementById('cart').innerHTML="Cart("+Object.keys(cart).length+")"
+});
+
+
+DisplayCart(cart)
+function DisplayCart(cart)
+{
+
+    var cartString="";
+    cartString += "<h5>This is my cart</h5>"
+
+    for(var x in cart)//cart={3:5,4:6}
+    {
+      cartString += document.getElementById("name"+x).innerHTML + "Qty:" + cart[x] +"<br />"
+      //cartString = cartString + document.getElementById("name"+x).innerHTML
+      //cartString = "<h5>This is my cart</h5>" + Titan + 5
+    }
+    cartString += "<a href='/conform' class='btn btn-success'>CheckOut</a>"
+    document.getElementById('cart').setAttribute('data-content',cartString)
+
+    $('[data-toggle="popover"]').popover()
+
+
+}
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>
